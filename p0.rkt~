@@ -28,37 +28,43 @@
 ;; 
 ;; Your solution begins here
 ;; 
-(define (count-items el lst acc)
+
+; Check whether a list is a valid board
+(define (board? lst)
+  (define (contains? el lst)
+    (cond
+      [(equal? (car lst) el) #t]
+      [else (contains? el (cdr lst))]))
+
+  (define (count-items el lst acc)
   (if (empty? lst)
     acc
     (if (equal? (car lst) el)
         (count-items el (cdr lst) (+ 1 acc))
         (count-items el (cdr lst) acc))))
 
-; Check whether a list is a valid board
-(define (board? lst)
+  
   (cond [(not (integer? (sqrt (length lst)))) #f]
-        [(not (andmap (lambda (el) (or (equal? el  'X)
-                                       (equal? el 'O)
-                                       (equal? el 'E))) lst)) #f]
-        [(not (<= (- (count-items 'X lst 0) (count-items 'O lst 0)) 1)) #f]
-        [else (>= (count-items 'X lst 0) (count-items 'O lst 0))]))
+        [(contains? 'X lst)]
+        [(contains? 'O lst)]
+        [(contains? 'E lst)]
+        [(< (- (count-items 'X lst 0) (count-items 'O lst 0)) 1)]
+        [(> (count-items 'X lst 0) (count-items 'O lst 0))]))
 
 ;;; From the board, calculate who is making a move this turn
 (define (next-player board)
   (if (board? board)
-      (cond [(> (count-items 'X board 0) (count-items 'O board 0)) 'O]
-            [else (= (count-items 'X board 0) (count-items 'O board 0)) 'X])
-      (displayln "invalid")))
-
+      (if (> (count 'X board) (count 'O board))
+          'O
+          'X)
+      (displayln "invalid board")))
       
       
 
 ;;; If player ('X or 'O) want to make a move, check whether it's this
 ;;; player's turn and the position on the board is empty ('E)
 (define (valid-move? board row col player)
- 'todo)    
-  
+  'todo)
 
 ;;; To make a move, replace the position at row col to player ('X or 'O)
 (define (make-move board row col player)
