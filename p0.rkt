@@ -35,6 +35,7 @@
         (count-items el (cdr lst) (+ 1 acc))
         (count-items el (cdr lst) acc))))
 
+  
 ; Check whether a list is a valid board
 (define (board? lst)
   (cond [(not (integer? (sqrt (length lst)))) #f]
@@ -53,16 +54,27 @@
 
       
       
-
 ;;; If player ('X or 'O) want to make a move, check whether it's this
 ;;; player's turn and the position on the board is empty ('E)
 (define (valid-move? board row col player)
- 'todo)    
+  (define n (sqrt(length board)))
+  (if (board? board)
+     (if (integer? (and row col))
+         (cond [(not (equal? player (next-player board))) #f]
+               [(not (and (<= 0 row (- n 1))
+                          (<= 0 col (- n 1)))) #f]
+               [else (equal? (list-ref board (+ (* row n) col)) 'E)])
+         #f)
+     #f))
+
+                     
   
 
 ;;; To make a move, replace the position at row col to player ('X or 'O)
 (define (make-move board row col player)
-  'todo)
+  (define n (sqrt(length board)))
+  (list-set (board (list-ref board (+ (* row n) col)) player)))
+      
 
 ;;; To determine whether there is a winner?
 (define (winner? board)
