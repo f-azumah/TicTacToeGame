@@ -75,11 +75,68 @@
   (define n (sqrt(length board)))
   (list-set (board (list-ref board (+ (* row n) col)) player)))
       
-
+  
 ;;; To determine whether there is a winner?
-(define (winner? board)
-  'todo)
+(define (take l n)
+    (if (equal? n 0)
+        '()
+        (cons (first l)(take (rest l) (- n 1)))))
+  
+(define (drop l n)
+    (if (equal? n 0)
+        l
+        (drop (rest l) (- n 1))))
 
+(define (winner? board)
+  
+  (define size (sqrt (length board)))
+  
+  (define (diagonal board)
+    (define (get-ith l)
+      (if (empty? l)
+          '()
+          (cons (list-ref board (+ (first l) (* (first l)size)))
+                (get-ith (rest l)))))
+    (get-ith (range size)))
+
+  (define (reverse-diagonal board)
+    (diagonal (reverse board)))
+  
+  (define (get-rows board)
+    (map (lambda (row) (take (drop board (* row size)) size))
+         (range size)))
+  
+  (define (get-cols board)
+    (map (lambda (c)
+           (map (lambda (row)
+                  (list-ref board (+ c (* row size))))
+                (range size)))
+         (range size)))
+
+  
+  (define lsts (append (list (diagonal board))
+                       (list (reverse-diagonal board))
+                       (get-rows board)
+                       (get-cols board)))
+  
+  (define (is-all-X? lsts)
+    (ormap
+     (lambda (l)
+       (andmap (lambda (e) (equal? e 'X)) l))
+     lsts))
+
+  (define (is-all-O? lsts)
+    (ormap
+     (lambda (l) (andmap (lambda (e) (equal? e 'O)) l))
+     lsts))
+
+    
+  (cond
+    [(is-all-X? lsts) 'X]
+    [(is-all-O? lsts) 'O]
+    [else #f]))
+       
+  
 ;;; The board is the list containing E O X 
 ;;; Player will always be 'O
 ;;; returns a pair of x and y
