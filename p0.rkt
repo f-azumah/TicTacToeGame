@@ -2,7 +2,6 @@
 
 ;;; Project 0 Tic-tac-toe with Racket
 ;;; 
-;;; Please immediately read README.md
 
 (provide board?
          next-player
@@ -11,9 +10,6 @@
           winner?
           calculate-next-move)
 
-;; 
-;; Useful utility functions
-;;
 
 ; Returns the number of elements in l for which the predicate f
 ; evaluates to #t. For example:
@@ -25,9 +21,7 @@
         [(f (car l)) (add1 (count f (cdr l)))]
         [else (count f (cdr l))]))
 
-;; 
-;; Your solution begins here
-;; 
+
 (define (count-items el lst acc)
   (if (empty? lst)
     acc
@@ -137,9 +131,5 @@
     [else #f]))
        
   
-;;; The board is the list containing E O X 
-;;; Player will always be 'O
-;;; returns a pair of x and y
-(define (calculate-next-move board player)
-  'todo)
+
 
